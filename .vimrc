@@ -6,7 +6,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'majutsushi/tagbar'
 Plug 'flazz/vim-colorschemes'
-Plug 'Evalir/dosbox-vim-colorscheme'
+Plug 'gsmrs/dosbox-vim-colorscheme'
 Plug 'chriskempson/base16-vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'morhetz/gruvbox'
@@ -133,7 +133,7 @@ if exists('+termguicolors')
 endif
 
 set background=dark
-colorscheme elflord
+colorscheme dosbox-black
 
 " Set extra options when running in GUI mode
 if has("gui_running")
