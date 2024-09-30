@@ -6,8 +6,11 @@ vim.call('plug#begin')
 
 -- general stuff
 Plug('neovim/nvim-lspconfig')
+Plug('williamboman/mason.nvim')
 Plug('archseer/colibri.vim')
-Plug('itchyny/lightline.vim')
+Plug('morhetz/gruvbox')
+Plug('nanotech/jellybeans.vim')
+Plug('nvim-lualine/lualine.nvim')
 Plug('tpope/vim-surround')
 Plug('tpope/vim-commentary')
 Plug('tpope/vim-fugitive')
@@ -36,7 +39,7 @@ vim.call('plug#end')
 --[[
 -- General configuration
 --]]
-vim.cmd("colorscheme colibri")
+vim.cmd("colorscheme jellybeans")
 
 vim.o.splitright = true
 vim.o.splitbelow = true
@@ -63,6 +66,7 @@ vim.o.tabstop = 4
 vim.o.smartindent = false
 vim.o.wrap = true
 
+vim.o.completeopt = "longest,menuone"
 
 --[[
 -- key bindings
@@ -109,6 +113,14 @@ vim.keymap.set("n", "ga", "<Plug>(EasyAlign)")
 -- misc. init
 --]]
 
+require('mason').setup()
+
+require('lualine').setup({
+    sections = {
+        lualine_c = {{'filename', path=1}}
+    }
+})
+
 --[[
 -- LSP configuration
 --]]
@@ -122,11 +134,16 @@ vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
 
+local use_semantic_highlighting = false
+
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
     callback = function(ev)
         local client = vim.lsp.get_client_by_id(ev.data.client_id)
-        client.server_capabilities.semanticTokensProvider = nil
+
+        if not use_semantic_highlighting then
+            client.server_capabilities.semanticTokensProvider = nil
+        end
 
         vim.bo[ev.buf].omnifunc = "v:lua.vim.lsp.omnifunc"
 
