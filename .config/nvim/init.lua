@@ -19,6 +19,7 @@ Plug('junegunn/fzf', { ['do'] = function()
   vim.fn['fzf#install']()
 end })
 Plug('junegunn/fzf.vim')
+Plug('github/copilot.vim')
 
 -- language specific
 Plug('rust-lang/rust.vim')
@@ -67,6 +68,10 @@ vim.o.smartindent = false
 vim.o.wrap = true
 
 vim.o.completeopt = "longest,menuone"
+vim.o.synmaxcol = 200
+
+vim.o.listchars = "tab:»·,trail:·,nbsp:·"
+vim.o.list = true
 
 --[[
 -- key bindings
@@ -120,6 +125,19 @@ require('lualine').setup({
         lualine_c = {{'filename', path=1}}
     }
 })
+
+function TrimWhitespace()
+    -- Save cursor position
+    local cursor_pos = vim.fn.getpos('.')
+
+    -- Remove trailing whitespace
+    vim.cmd([[%s/\s\+$//e]])
+
+    -- Restore cursor position
+    vim.fn.setpos('.', cursor_pos)
+end
+vim.api.nvim_create_user_command('TrimWhitespace', TrimWhitespace, {})
+
 
 --[[
 -- LSP configuration
