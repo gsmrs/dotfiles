@@ -4,12 +4,17 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'majutsushi/tagbar'
 Plug 'flazz/vim-colorschemes'
+Plug 'ayu-theme/ayu-vim'
 Plug 'gsmrs/dosbox-vim-colorscheme'
 Plug 'chriskempson/base16-vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'morhetz/gruvbox'
+Plug 'foxbunny/vim-amber'
+Plug 'Tetralux/odin.vim'
 
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
@@ -17,6 +22,8 @@ Plug 'junegunn/vim-easy-align'
 Plug 'PeterRincker/vim-argumentative'
 
 Plug 'rhysd/vim-clang-format'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'nicwest/vim-camelsnek'
 
 " language specific plugins
 Plug 'plasticboy/vim-markdown'
@@ -26,6 +33,14 @@ Plug 'mattn/emmet-vim', {'for': ['html', 'css', 'htmldjango']}
 Plug 'rust-lang/rust.vim'
 Plug 'ziglang/zig.vim'
 Plug 'fatih/vim-go'
+Plug 'kylelaker/riscv.vim'
+Plug 'https://git.sr.ht/~sircmpwn/hare.vim'
+Plug 'fcpg/vim-farout'
+Plug 'https://github.com/vim-scripts/asmM6502.vim'
+
+Plug '~/src/c-primitive-types.vim'
+
+Plug 'neovim/nvim-lspconfig'
 
 call plug#end()
 set nocompatible
@@ -133,7 +148,13 @@ if exists('+termguicolors')
 endif
 
 set background=dark
-colorscheme dosbox-black
+let ayucolor="dark"
+colorscheme ayu
+hi Normal guibg=NONE ctermbg=None
+
+" set background=dark
+" colorscheme dosbox-black
+" colorscheme jellybeans
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -142,7 +163,7 @@ if has("gui_running")
     set guioptions+=e
     set t_Co=256
     set guitablabel=%M\ %t
-    set guifont=DejaVu\ Sans\ Mono\ Bold\ 10
+    set guifont=Hack 10
 endif
 
 " Use Unix as the standard file type
@@ -237,6 +258,8 @@ nmap <leader>q :q!<cr>
 " switch buffers using <leader>n / <leader>m
 nnoremap <leader>n :bp<cr>
 nnoremap <leader>m :bn<cr>
+
+set pastetoggle=<F2>
 
 " Reselect visual block after indent/outdent
 vnoremap < <gv

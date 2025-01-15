@@ -19,6 +19,7 @@ Plug('junegunn/fzf', { ['do'] = function()
   vim.fn['fzf#install']()
 end })
 Plug('junegunn/fzf.vim')
+Plug('wellle/targets.vim')
 Plug('github/copilot.vim')
 
 -- language specific
@@ -45,6 +46,7 @@ vim.cmd("colorscheme jellybeans")
 vim.o.splitright = true
 vim.o.splitbelow = true
 vim.o.number = true
+vim.o.cursorline = true
 vim.o.scrolloff = 2
 
 vim.o.ignorecase = true
@@ -72,6 +74,12 @@ vim.o.synmaxcol = 200
 
 vim.o.listchars = "tab:»·,trail:·,nbsp:·"
 vim.o.list = true
+
+-- maximum syntax highlighting columns, avoids lag in long wrapped lines
+vim.o.synmaxcol = 200
+
+-- don't treat C99 compound literals as errors
+vim.g.c_no_curly_error = 1
 
 --[[
 -- key bindings
@@ -115,6 +123,17 @@ vim.keymap.set("n", "ga", "<Plug>(EasyAlign)")
 
 
 --[[
+-- Neovide
+--]]
+
+if vim.g.neovide then
+    vim.o.guifont = "Berkeley Mono:h11:#e-subpixelantialias:#h-full"
+    vim.g.neovide_scroll_animation_length = 0.066
+    vim.g.neovide_scroll_animation_far_lines = 1
+    vim.g.neovide_cursor_animation_length = 0.033
+end
+
+--[[
 -- misc. init
 --]]
 
@@ -138,7 +157,6 @@ function TrimWhitespace()
 end
 vim.api.nvim_create_user_command('TrimWhitespace', TrimWhitespace, {})
 
-
 --[[
 -- LSP configuration
 --]]
@@ -146,13 +164,28 @@ local lspconfig = require("lspconfig")
 lspconfig.gopls.setup({})
 lspconfig.clangd.setup({})
 lspconfig.zls.setup({})
+lspconfig.ols.setup({})
+lspconfig.pylsp.setup({
+    settings = {
+        pylsp = {
+            plugins = {
+                pycodestyle = {
+                    ignore = {'E402'},
+                    maxLineLength = 120
+                }
+            }
+        }
+    }
+
+})
+lspconfig.rust_analyzer.setup({})
 
 vim.keymap.set("n", "<space>e", vim.diagnostic.open_float)
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev)
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next)
 vim.keymap.set("n", "<space>q", vim.diagnostic.setloclist)
 
-local use_semantic_highlighting = false
+local use_semantic_highlighting = true
 
 vim.api.nvim_create_autocmd("LspAttach", {
     group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -178,6 +211,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "<space>f", function()
             vim.lsp.buf.format { async = true }
         end, opts)
+        vim.keymap.set("n", "<space>h", vim.lsp.buf.document_highlight, opts)
+        vim.keymap.set("n", "<space>cr", vim.lsp.buf.clear_references, ops)
+        vim.keymap.set("n", "<space>u", vim.lsp.buf.document_symbol, opts)
     end,
 })
-
