@@ -157,6 +157,13 @@ function TrimWhitespace()
 end
 vim.api.nvim_create_user_command('TrimWhitespace', TrimWhitespace, {})
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "c,cpp",
+    callback = function()
+        vim.bo.commentstring = "// %s"
+    end
+})
+
 --[[
 -- LSP configuration
 --]]
@@ -216,3 +223,5 @@ vim.api.nvim_create_autocmd("LspAttach", {
         vim.keymap.set("n", "<space>u", vim.lsp.buf.document_symbol, opts)
     end,
 })
+
+
